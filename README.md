@@ -14,4 +14,4 @@
 
 2). `docker exec -it *container-id* /bin/bash` to connect to the container
 
-3). `mongosh -u *user* -p *password*` to connect to shell 
+3). `mongosh -u root -p *password*` to connect to shell. 
