@@ -2,9 +2,9 @@
 
 
 ## `Running project`
-1). "docker compose up -d" starts it
+1). `docker compose up -d` starts it
 
-2). "docker compose down" stops it
+2). `docker compose down` stops it
 
 
 ## `Connecting to mongo`
