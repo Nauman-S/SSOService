@@ -2,6 +2,8 @@
 
 
 ## `Running project`
+0). Optional but recommended to set a new password for mongodb in Persistence/Dockerfile
+
 1). `docker compose up -d` starts it
 
 2). `docker compose down` stops it
