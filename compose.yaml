@@ -1,0 +1,13 @@
+services:
+  persistence:
+      build: ./Persistence
+      volumes:
+        - vol_ssoserver_mongo:/data/db
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=changemedaddy #if you do change then also change in application.properties
+      ports:
+        - 27017:27017
+volumes:
+  vol_ssoserver_mongo:
+      
