@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -19,7 +20,6 @@
             <h4><%= identifier %></h4>
         </div>
 
-        </form>
     </div>
 
     <!-- Optional JavaScript -->
