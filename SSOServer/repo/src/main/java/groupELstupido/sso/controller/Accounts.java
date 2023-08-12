@@ -67,7 +67,7 @@ public class Accounts {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value={NullPointerException.class})
     public String unknownExceptionHandler(Model m) {
-        m.addAttribute("msg", "NullPointer Exception");
+        m.addAttribute("msg", "NullPointer Exception In Accounts");
         return "unknownException";
     }
 
