@@ -1,10 +1,12 @@
 package groupELstupido.sso.service;
 
 import groupELstupido.sso.dao.UserDao;
-import groupELstupido.sso.domain.model.User;
 import groupELstupido.sso.domain.model.UserDisplay;
 import groupELstupido.sso.request.AuthenticateUserRequest;
+import groupELstupido.sso.request.RegisterUserRequest;
 import groupELstupido.sso.util.EmailUtil;
+import groupELstupido.sso.util.PasswordUtil;
+import groupELstupido.sso.util.UsernameUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,26 @@ public class UserService {
     @Autowired
     private EmailUtil emailUtil;
 
-    public int createUser (User user) {
-        if (userDao.usernameExists(user.getUsername()) || userDao.emailExists(user.getEmail())) {
+    @Autowired
+    private UsernameUtil usernameUtil;
+
+    @Autowired
+    private PasswordUtil passwordUtil;
+
+    public int createUser (RegisterUserRequest request) {
+        String email = emailUtil.canonicalizeEmail(request.getEmail());
+        if (!emailUtil.validateEmailFormat(email) ){
+            return -1;
+        } else if (!usernameUtil.validateUsername(request.getUsername())) {
+            return -1;
+        } else if (!passwordUtil.validatePassword(request.getPassword())) {
             return -1;
         }
-     return userDao.createUser(user);
+        else if (userDao.usernameExists(request.getUsername()) || userDao.emailExists(request.getEmail()) ) {
+            return -1;
+        }
+
+     return userDao.createUser(request.getUsername(), email, request.getPassword());
     }
 
     public UserDisplay authenticateUser (AuthenticateUserRequest request) {

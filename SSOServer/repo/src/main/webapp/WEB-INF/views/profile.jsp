@@ -26,6 +26,8 @@
 <body>
             <%
                   UserDisplay user = (UserDisplay) request.getAttribute("userDisplay");
+                  System.out.println(user.getUsername());
+                  System.out.println(user.getEmail());
             %>
 
     <div class="container mt-5">
@@ -35,7 +37,7 @@
                 <div class="card">
                     <img src="profile-image.jpg" class="card-img-top profile-image" alt="User Profile Image" data-bs-toggle="modal" data-bs-target="#profileImageModal">
                     <div class="card-body">
-                        <h5 class="card-title">${user.getUsername()} </h5>
+                        <h5 class="card-title">${userDisplay.getUsername()} </h5>
 
                     </div>
                 </div>
@@ -71,7 +73,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Profile Details</h5>
-                        <p class="card-text"><strong>Email:</strong> ${user.getEmail()}</p>
+                        <p class="card-text"><strong>Email:</strong> ${userDisplay.getEmail()}</p>
                         <p class="card-text"><strong>Location:</strong> New York, USA</p>
                         <p class="card-text"><strong>Bio:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac purus sit amet odio tristique scelerisque vel et ex.</p>
                     </div>

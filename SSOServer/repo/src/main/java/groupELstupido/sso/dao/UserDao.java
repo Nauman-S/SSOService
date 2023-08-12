@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public class UserDao {
     List<User> userList = new ArrayList<>();
-    public int createUser(User user) {
-        userList.add(user);
+    public int createUser(String username, String email, String password) {
+        userList.add(new User(username, email, password));
         return userList.size();
     }
 
