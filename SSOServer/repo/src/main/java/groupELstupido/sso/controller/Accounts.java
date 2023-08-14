@@ -4,6 +4,7 @@ import groupELstupido.sso.domain.model.UserDisplay;
 import groupELstupido.sso.request.AuthenticateUserRequest;
 import groupELstupido.sso.request.RegisterUserRequest;
 import groupELstupido.sso.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,21 +20,38 @@ public class Accounts {
     UserService userService;
 
     @GetMapping("/login")
-    public String login() {
+    public ModelAndView login(HttpServletRequest request) {
         System.out.println("Login GET URI Triggered");
-        return "login";
+
+        HttpSession session;
+        ModelAndView mv = new ModelAndView();
+
+        if ((session = request.getSession(false))!= null) {
+            UserDisplay userDisplay;
+            if ( (userDisplay = (UserDisplay) session.getAttribute("userDisplay")) != null) {
+                mv.addObject("userDisplay", userDisplay);
+                mv.setViewName("profile");
+                return mv;
+            }
+        }
+        mv.setViewName("login");
+        return mv;
     }
 
     @PostMapping("/login")
-    public ModelAndView handleLoginEvent(@ModelAttribute AuthenticateUserRequest authenticateUserRequest, HttpSession session) {
+    public ModelAndView handleLoginEvent(@ModelAttribute AuthenticateUserRequest authenticateUserRequest, HttpServletRequest request) {
         System.out.println("Login POST URI Triggered");
 
         ModelAndView mv = new ModelAndView();
-        UserDisplay user ;
-        if ((user = userService.authenticateUser(authenticateUserRequest) )!= null ) {
-//            session.setAttribute("userLogin", true);
-//            session.setAttribute("user", user);
-            mv.addObject("userDisplay", user);
+        UserDisplay userDisplay ;
+
+        if ((userDisplay = userService.authenticateUser(authenticateUserRequest) )!= null ) {
+            HttpSession session = request.getSession(false);
+            session.invalidate();
+            session = request.getSession(true);
+            session.setAttribute("userDisplay", userDisplay);
+
+            mv.addObject("userDisplay", userDisplay);
             mv.setViewName("profile");
         } else {
             mv.setViewName("redirect:/accounts/login");
@@ -56,7 +74,7 @@ public class Accounts {
         if (userService.createUser(request) != -1) {
             UserDisplay userDisplay= new UserDisplay(request.getUsername(), request.getEmail());
             mv.addObject("userDisplay", userDisplay);
-            mv.setViewName("profile");
+            mv.setViewName("login");
         } else {
             mv.setViewName("signup");
         }
