@@ -35,10 +35,11 @@
             <div class="col-md-4">
 <!-- User Profile Card -->
                 <div class="card">
-                    <img src="profile-image.jpg" class="card-img-top profile-image" alt="User Profile Image" data-bs-toggle="modal" data-bs-target="#profileImageModal">
+                    <div class="text-center">
+                        <img src="${pageContext.request.contextPath}/static/images/default_user.png" class="card-img-top profile-image" alt="User Profile Image" data-bs-toggle="modal" data-bs-target="#profileImageModal" style="max-width: 50%; height: auto;">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">${userDisplay.getUsername()} </h5>
-
                     </div>
                 </div>
                 <!-- List of Friends -->
