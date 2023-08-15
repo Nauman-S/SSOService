@@ -82,6 +82,15 @@ public class Accounts {
         return mv;
     }
 
+    @GetMapping ("/logout")
+    public String handleLogoutEvent(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "index";
+    }
+
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value={NullPointerException.class})
     public String unknownExceptionHandler(Model m) {

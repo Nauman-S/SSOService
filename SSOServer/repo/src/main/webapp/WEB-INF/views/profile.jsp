@@ -150,6 +150,8 @@
     <script>
         function logout() {
             // Add your logout logic here
+
+            window.location.href = "${pageContext.request.contextPath}/accounts/logout";
             alert('Logged out successfully');
         }
 
