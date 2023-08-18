@@ -129,16 +129,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="profileImageModalLabel">Profile Image Options</h5>
+                    <h5 class="modal-title" id="profileImageModalLabel">Update Profile Picture</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
-                    <img src="profile-image.jpg" class="img-fluid mb-3" alt="User Profile Image">
-		<div>
-                    <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#uploadImageModal" data-bs-dismiss="modal">Upload New Image</button>
-                    <button class="btn btn-danger" onclick="deleteImage()" data-bs-dismiss="modal">Delete Image</button>
-		</div>
+                    <img src="${pageContext.request.contextPath}/static/images/default_user.png" class="img-fluid mb-3" alt="User Profile Image">
+		            <div class="d-flex justify-content-between">
+		                <input type="file" id="hiddenFileInput" style="display: none;" accept="image/*" onchange="handleFileChange()">
+                        <button class="btn btn-primary mb-2" onclick="triggerFileInput()">New</button>
+                        <button class="btn btn-danger" onclick="deleteImage()" data-bs-dismiss="modal">Delete</button>
+		            </div>
                 </div>
             </div>
         </div>
@@ -179,6 +180,32 @@
                 <button class="btn btn-sm btn-danger" onclick="removeFriend(this)">Remove</button>
             `;
             friendList.appendChild(listItem);
+        }
+
+        function triggerFileInput() {
+                document.getElementById('hiddenFileInput').click();
+        }
+
+        function handleFileChange() {
+                const file = document.getElementById('hiddenFileInput').files[0];
+                if (file) {
+                    console.log(file);
+                    const formData = new FormData();
+
+                    formData.append('profileImage', file);
+                    fetch('${pageContext.request.contextPath}/profile/updateImage', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.error('Error uploading file:', error);
+                    });
+
+                }
         }
     </script>
 </body>
