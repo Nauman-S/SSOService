@@ -71,14 +71,13 @@ public class Accounts {
     public ModelAndView handleSignUpEvent (@ModelAttribute RegisterUserRequest request) {
         System.out.println("Sign up POST URI Triggered");
         ModelAndView mv = new ModelAndView();
-        if (userService.createUser(request) != -1) {
-            UserDisplay userDisplay= new UserDisplay(request.getUsername(), request.getEmail());
+        UserDisplay userDisplay;
+        if ( (userDisplay = userService.createUser(request)) != null) {
             mv.addObject("userDisplay", userDisplay);
             mv.setViewName("login");
         } else {
             mv.setViewName("signup");
         }
-
         return mv;
     }
 

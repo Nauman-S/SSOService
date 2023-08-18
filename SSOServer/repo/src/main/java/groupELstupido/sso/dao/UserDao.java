@@ -10,9 +10,10 @@ import java.util.List;
 @Repository
 public class UserDao {
     List<User> userList = new ArrayList<>();
-    public int createUser(String username, String email, String password) {
-        userList.add(new User(username, email, password));
-        return userList.size();
+    public UserDisplay createUser(String username, String email, String password) {
+        int identifier = userList.size();
+        userList.add(new User(username, email, password, identifier));
+        return new UserDisplay(username, email, identifier);
     }
 
     public boolean usernameExists (String username) {
@@ -37,7 +38,7 @@ public class UserDao {
         for (User userFromList: userList) {
             if (email.equals(userFromList.getEmail())) {
                 if (password.equals(userFromList.getPassword())) {
-                    return new UserDisplay(userFromList.getUsername(), userFromList.getEmail());
+                    return new UserDisplay(userFromList.getUsername(),userFromList.getEmail(), userFromList.getIdentifier());
                 }
                 return null;
             }
@@ -46,12 +47,20 @@ public class UserDao {
     }
 
     public UserDisplay getUserByUsernameAndPassword (String username, String password) {
+        UserDisplay userDisplay  = getUserByUsername(username);
+        if (userDisplay != null) {
+            User user = userList.get(userDisplay.getUserIdentifier());
+            if (password.equals(user.getPassword())) {
+                return userDisplay;
+            }
+        }
+        return null;
+    }
+
+    public UserDisplay getUserByUsername(String username) {
         for (User userFromList: userList) {
             if (username.equals(userFromList.getUsername())) {
-                if (password.equals(userFromList.getPassword())) {
-                    return new UserDisplay(userFromList.getUsername(), userFromList.getEmail());
-                }
-                return null;
+                return new UserDisplay(userFromList.getUsername(), userFromList.getEmail(), userFromList.getIdentifier());
             }
         }
         return null;
