@@ -2,6 +2,7 @@ package groupELstupido.sso.dao;
 
 import groupELstupido.sso.domain.model.User;
 import groupELstupido.sso.domain.model.UserDisplay;
+import groupELstupido.sso.domain.model.UserImage;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -64,5 +65,17 @@ public class UserDao {
             }
         }
         return null;
+    }
+
+    public boolean updateUserImage(String username, byte [] imageData, String imageName) {
+        UserDisplay userDisplay  = getUserByUsername(username);
+
+        if (userDisplay != null) {
+            UserImage userImage = new UserImage(userDisplay.getUserIdentifier(), imageData, imageName);
+            User user = userList.get(userDisplay.getUserIdentifier());
+            user.setUserImage(userImage);
+            return true;
+        }
+        return false;
     }
 }
