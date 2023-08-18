@@ -23,17 +23,17 @@ public class UserService {
     @Autowired
     private PasswordUtil passwordUtil;
 
-    public int createUser (RegisterUserRequest request) {
+    public UserDisplay createUser (RegisterUserRequest request) {
         String email = emailUtil.canonicalizeEmail(request.getEmail());
         if (!emailUtil.validateEmailFormat(email) ){
-            return -1;
+            return null;
         } else if (!usernameUtil.validateUsername(request.getUsername())) {
-            return -1;
+            return null;
         } else if (!passwordUtil.validatePassword(request.getPassword())) {
-            return -1;
+            return null;
         }
         else if (userDao.usernameExists(request.getUsername()) || userDao.emailExists(request.getEmail()) ) {
-            return -1;
+            return null;
         }
 
      return userDao.createUser(request.getUsername(), email, request.getPassword());
