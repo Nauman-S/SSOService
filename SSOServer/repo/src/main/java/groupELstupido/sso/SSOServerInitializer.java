@@ -1,5 +1,7 @@
 package groupELstupido.sso;
 
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletRegistration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class SSOServerInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -20,5 +22,11 @@ public class SSOServerInitializer extends AbstractAnnotationConfigDispatcherServ
     protected String[] getServletMappings() {
         String [] servletMappings= { "/" };
         return servletMappings;
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        super.customizeRegistration(registration);
+        registration.setMultipartConfig(new MultipartConfigElement(null, 5242880, 10485760, 0));
     }
 }
