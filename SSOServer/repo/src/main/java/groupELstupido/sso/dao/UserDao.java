@@ -78,4 +78,8 @@ public class UserDao {
         }
         return false;
     }
+
+    public UserImage getUserImage (int userId) {
+        return userList.get(userId).getUserImage();
+    }
 }

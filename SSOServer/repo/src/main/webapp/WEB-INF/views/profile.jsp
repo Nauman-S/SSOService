@@ -20,7 +20,11 @@
                 right: 0;
                 margin: 20px;
             }
-	}
+	    }
+	    .profile-image {
+            border-radius: 50%; /* Makes the image circular */
+             border: 2px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -36,7 +40,7 @@
 <!-- User Profile Card -->
                 <div class="card">
                     <div class="text-center">
-                        <img src="${pageContext.request.contextPath}/static/images/default_user.png" class="card-img-top profile-image" alt="User Profile Image" data-bs-toggle="modal" data-bs-target="#profileImageModal" style="max-width: 50%; height: auto;">
+                        <img id="userProfileImage1" src="${pageContext.request.contextPath}/static/images/default_user.png" class="card-img-top profile-image" alt="User Profile Image" data-bs-toggle="modal" data-bs-target="#profileImageModal" style="max-width: 50%; height: auto;">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">${userDisplay.getUsername()} </h5>
@@ -134,7 +138,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <img src="${pageContext.request.contextPath}/static/images/default_user.png" class="img-fluid mb-3" alt="User Profile Image">
+                    <img id = "userProfileImage2" src="${pageContext.request.contextPath}/static/images/default_user.png" class="img-fluid mb-3" alt="User Profile Image">
 		            <div class="d-flex justify-content-between">
 		                <input type="file" id="hiddenFileInput" style="display: none;" accept="image/*" onchange="handleFileChange()">
                         <button class="btn btn-primary mb-2" onclick="triggerFileInput()">New</button>
@@ -162,7 +166,6 @@
             listItem.remove();
         }
 
-        // Add Friend Form Submission
         document.getElementById("addFriendForm").addEventListener("submit", function(event) {
             event.preventDefault();
             const friendName = document.getElementById("friendName").value;
@@ -189,7 +192,6 @@
         function handleFileChange() {
                 const file = document.getElementById('hiddenFileInput').files[0];
                 if (file) {
-                    console.log(file);
                     const formData = new FormData();
 
                     formData.append('profileImage', file);
@@ -198,15 +200,44 @@
                         body: formData
                     })
                     .then(response => {
-                        console.log(response);
+                        fetchUserProfileImage();
                     })
                     .catch(error => {
-                        // Handle errors
                         console.error('Error uploading file:', error);
                     });
 
                 }
         }
+
+        function fetchUserProfileImage() {
+            fetch('${pageContext.request.contextPath}/profile/getImage', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/octet-stream',
+                },
+            })
+                .then((response) => {
+                    const isImageFound = response.headers.get("found");
+                    if (response.ok && isImageFound === "true") {
+                        response.blob().then((blob) => {
+                            const objectURL = URL.createObjectURL(blob);
+                            document.getElementById('userProfileImage1').src = objectURL;
+                            document.getElementById('userProfileImage2').src = objectURL;
+                        });
+                    } else {
+                        document.getElementById('userProfileImage1').src = "${pageContext.request.contextPath}/static/images/default_user.png";
+                        document.getElementById('userProfileImage2').src = "${pageContext.request.contextPath}/static/images/default_user.png";
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching user image:', error);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchUserProfileImage();
+        });
+
     </script>
 </body>
 </html>
